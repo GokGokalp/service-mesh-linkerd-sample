@@ -14,8 +14,13 @@ namespace ProductGateway.API.Controllers
     {
         private readonly IHttpClientFactory _clientFactory;
 
-        [HttpGet]
-        public async Task<ActionResult<GetProductResponse>> Get(int productId)
+        public ProductsController(IHttpClientFactory clientFactory)
+        {
+            _clientFactory = clientFactory;
+        }
+
+        [HttpGet("{productId}")]
+        public async Task<ActionResult<GetProductResponse>> Get([FromRoute]int productId)
         {
             var productDetail = GetProductDetailAsync(productId);
             var productPrice = GetProductPriceAsync(productId);
