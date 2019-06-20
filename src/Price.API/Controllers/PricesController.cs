@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Price.API.Controllers
 {
@@ -7,9 +9,18 @@ namespace Price.API.Controllers
     public class PricesController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<GetPriceResponse> Get(int productId)
+        public ActionResult<GetPriceResponse> Get([FromQuery]int productId)
         {
-            return Ok(new GetPriceResponse { ProductId = productId, Price = 100 });
+            if (productId == 1)
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(10).Milliseconds);
+
+                return Ok(new GetPriceResponse { ProductId = productId, Price = 100 });
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 

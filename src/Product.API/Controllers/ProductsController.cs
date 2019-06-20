@@ -9,7 +9,14 @@ namespace Product.API.Controllers
         [HttpGet("{productId}")]
         public ActionResult<GetProductDetailResponse> Get([FromRoute]int productId)
         {
-            return Ok(new GetProductDetailResponse { ProductId = productId, Name = "Macbook Pro", Description = "Intel Core i5 8GB 256GB SSD MacOs Sierra" });
+            if (productId == 1)
+            {
+                return Ok(new GetProductDetailResponse { ProductId = productId, Name = "Macbook Pro", Description = "Intel Core i5 8GB 256GB SSD MacOs Sierra" });
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 

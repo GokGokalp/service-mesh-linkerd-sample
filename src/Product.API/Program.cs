@@ -12,7 +12,6 @@ namespace Product.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            .UseUrls("http://*:9090")
             .UseStartup<Startup>();
     }
 }
