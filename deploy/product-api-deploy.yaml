@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: linkerd-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-api-deploy
+  namespace: linkerd-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-api
+  template:
+    metadata:
+      labels:
+        app: product-api
+    spec:
+      containers:
+      - name: product-api
+        image: ggplayground.azurecr.io/product-api:dev
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          name: http
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-api-svc
+  namespace: linkerd-test
+spec:
+  type: ClusterIP
+  selector:
+    app: product-api
+  ports:
+  - port: 9090
+    targetPort: http

@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace ProductGateway.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/products")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IConfiguration _configuration;
 
-        public ProductsController(IHttpClientFactory clientFactory)
+        public ProductsController(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
             _clientFactory = clientFactory;
+            _configuration = configuration;
         }
 
         [HttpGet("{productId}")]
@@ -42,7 +42,9 @@ namespace ProductGateway.API.Controllers
 
             HttpClient client = _clientFactory.CreateClient();
 
-            HttpResponseMessage response = await client.GetAsync(requestUri: $"http://localhost:9090/api/products/{productId}");
+            string productApiBaseUrl = _configuration.GetValue<string>("Product_API_Host");
+
+            HttpResponseMessage response = await client.GetAsync(requestUri: $"{productApiBaseUrl}/api/products/{productId}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -58,7 +60,9 @@ namespace ProductGateway.API.Controllers
 
             HttpClient client = _clientFactory.CreateClient();
 
-            HttpResponseMessage response = await client.GetAsync(requestUri: $"http://localhost:8080/api/prices?productId={productId}");
+            string priceApiBaseUrl = _configuration.GetValue<string>("Price_API_Host");
+
+            HttpResponseMessage response = await client.GetAsync(requestUri: $"{priceApiBaseUrl}/api/prices?productId={productId}");
 
             if (response.IsSuccessStatusCode)
             {
